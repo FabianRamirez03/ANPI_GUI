@@ -31,6 +31,7 @@ calc_frame.pack(fill='x')
 help_frame = tk.Frame(root, height=150, width=width, bg="grey", bd=2)
 help_frame.pack(fill='x')
 
+
 # ________________________________________Methods Tabs_________________________________________________________
 style = ttk.Style()
 
