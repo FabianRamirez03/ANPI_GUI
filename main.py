@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 from PIL import ImageTk, Image
+import Metodos
 
 # Constantes gráficas
 width = 500
@@ -9,7 +10,35 @@ heigth = 670
 
 font = "Calibri"
 
-# ___________________________________-Aplicacion Grafica_____________________________________________
+# _______________________________________Funciones______________________________________________
+
+functions = ["trapecio", "simpson", "boole", "trapecioCompuesto", "simpsonCompuesto", "gaussian"]
+args = ["()", "()", "()", "()", "()", "()"]
+
+
+def calcular():
+    global var, functions, args
+    function_string = function_entry.get()
+    a = a_entry.get()
+    b = b_entry.get()
+    puntos = points_entry.get()
+    x = eval('Metodos.' + functions[var.get()] + args[var.get()])
+    setAproxText(x)
+
+
+def setAproxText(text):
+    aprox_entry.delete(0, tk.END)
+    aprox_entry.insert(0, text)
+    return
+
+
+def setErrorText(text):
+    error_entry.delete(0, tk.END)
+    error_entry.insert(0, text)
+    return
+
+
+# ___________________________________Aplicacion Grafica_____________________________________________
 root = tk.Tk()
 root.configure(background='white')
 root.title('Calculadora métodos númericos')
@@ -119,7 +148,7 @@ boole_radio.place(x=170, y=120)
 
 
 trapecio_complex_radio = tk.Radiobutton(complex_methods_frame, text="Trapecio compuesto", variable=var, value=3,
-                                          font=(font, 12), background="white")
+                                        font=(font, 12), background="white")
 trapecio_complex_radio.place(x=60, y=40)
 
 simpson_complex_radio = tk.Radiobutton(complex_methods_frame, text="Simpson compuesto", variable=var, value=4,
@@ -130,7 +159,6 @@ gaussian_radio = tk.Radiobutton(complex_methods_frame, text="Cuadraturas Gaussia
                                 font=(font, 12), background="white")
 gaussian_radio.place(x=60, y=120)
 
-
 # Entry de puntos a utilizar
 points_label = tk.Label(complex_methods_frame, text="Puntos a utilizar =", background="white", font=(font, 12))
 points_label.place(x=260, y=80)
@@ -138,20 +166,19 @@ points_label.place(x=260, y=80)
 points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6)
 points_entry.place(x=400, y=80)
 
-
 # ________________________________________Calc tab Content______________________________________________
 
 # Boton para calcular
 calc_photoImage = tk.PhotoImage(file="Images/button_calcular.png")
-calc_button = tk.Button(calc_frame, image=calc_photoImage, borderwidth=0, background="white")
+calc_button = tk.Button(calc_frame, image=calc_photoImage, borderwidth=0, background="white", command=calcular)
 calc_button.place(x=180, y=2)
 
 # Entry de la aproximación
 aprox_label = tk.Label(calc_frame, text="Aproximación =", background="white", font=(font, 12))
 aprox_label.place(x=60, y=80)
 
-points_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22)
-points_entry.place(x=180, y=80)
+aprox_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22)
+aprox_entry.place(x=180, y=80)
 
 # Entry del error
 error_label = tk.Label(calc_frame, text="Error =", background="white", font=(font, 12))
@@ -166,7 +193,6 @@ error_entry.place(x=180, y=110)
 help_photoImage = tk.PhotoImage(file="Images/button_ayuda.png")
 help_button = tk.Button(help_frame, image=help_photoImage, borderwidth=0, background="white")
 help_button.place(x=210, y=2)
-
 
 
 # ________________________________________Closing protocol______________________________________________
