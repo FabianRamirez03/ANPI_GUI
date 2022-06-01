@@ -21,9 +21,11 @@ def calcular():
     function_string = function_entry.get()
     a = a_entry.get()
     b = b_entry.get()
+    # Checkear continuidad de la función
     puntos = points_entry.get()
-    x = eval('Metodos.' + functions[var.get()] + args[var.get()])
-    setAproxText(x)
+    values = eval('Metodos.' + functions[var.get()] + args[var.get()])
+    setAproxText(values[0])
+    setErrorText(values[1])
 
 
 def setAproxText(text):

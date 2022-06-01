@@ -1,22 +1,22 @@
 def trapecio():
-    return "trapecio"
+    return ["trapecio", 152]  # [Aproximacion, error]
 
 
 def simpson():
-    return "simpson"
+    return ["simpson", 158]
 
 
 def boole():
-    return "boole"
+    return ["boole", 117]
 
 
 def trapecioCompuesto():
-    return "trapecioCompuesto"
+    return ["trapecioCompuesto", 255]
 
 
 def simpsonCompuesto():
-    return "simpsonCompuesto"
+    return ["simpsonCompuesto", 451]
 
 
 def gaussian():
-    return "gaussian"
+    return ["gaussian", 474]
