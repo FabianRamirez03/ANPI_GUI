@@ -13,16 +13,17 @@ font = "Calibri"
 # _______________________________________Funciones______________________________________________
 
 functions = ["trapecio", "simpson", "boole", "trapecioCompuesto", "simpsonCompuesto", "gaussian"]
-args = ["()", "()", "()", "()", "()", "()"]
+args = ["()", "()", "(function_string, a, b)", "()", "(function_string, a, b, puntos)",
+        "(function_string, a, b, puntos)"]
 
 
 def calcular():
     global var, functions, args
     function_string = function_entry.get()
-    a = a_entry.get()
-    b = b_entry.get()
+    a = int(a_entry.get())
+    b = int(b_entry.get())
     # Checkear continuidad de la función
-    puntos = points_entry.get()
+    puntos = int(points_entry.get())
     values = eval('Metodos.' + functions[var.get()] + args[var.get()])
     setAproxText(values[0])
     setErrorText(values[1])
@@ -114,21 +115,25 @@ integral_image_label.place(x=180, y=45)
 function_label = tk.Label(top_frame, text="F(x)   = ", background="white", font=(font, 12))
 function_label.place(x=80, y=120)
 
-function_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=32)
+function_stringVar = tk.StringVar(root, value='x')
+
+function_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=32, textvariable=function_stringVar)
 function_entry.place(x=150, y=122)
+
+zero_stringVar = tk.StringVar(root, value='0')
 
 # Entry de a
 a_label = tk.Label(top_frame, text="a  =", background="white", font=(font, 12))
 a_label.place(x=130, y=170)
 
-a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5)
+a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=zero_stringVar)
 a_entry.place(x=180, y=170)
 
 # Entry de b
 b_label = tk.Label(top_frame, text="b  =", background="white", font=(font, 12))
 b_label.place(x=280, y=170)
 
-b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5)
+b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=zero_stringVar)
 b_entry.place(x=330, y=170)
 
 # ________________________________________Complex method tab Content______________________________________________
@@ -165,7 +170,8 @@ gaussian_radio.place(x=60, y=120)
 points_label = tk.Label(complex_methods_frame, text="Puntos a utilizar =", background="white", font=(font, 12))
 points_label.place(x=260, y=80)
 
-points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6)
+
+points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6, textvariable=zero_stringVar)
 points_entry.place(x=400, y=80)
 
 # ________________________________________Calc tab Content______________________________________________
