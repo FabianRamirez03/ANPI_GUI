@@ -12,8 +12,45 @@ def simpson():
     return ["simpson", 158]
 
 
-def boole():
-    return ["boole", 117]
+def boole(f,a,b):
+
+    """
+    Esta función aproxima el valor de la integral de una función f(x), utilizando la Regla de Boole.
+    
+    Sintaxis: boole(f,a,b)
+    
+    Parámetros Iniciales: 
+                f = representa a la función f(x) a integrar
+                a = es el valor inicial del intervalo a integrar
+                b = es el valor final del intervalo a integrar
+                
+    Parámetros de Salida: 
+                aprox = aproximación del valor de la integral de la función f
+                cota_error = error máximo posible 
+                
+    """ 
+
+    func = sympify (f)
+
+    primeraDerivada = diff ( func)
+    segundaDerivada = diff ( primeraDerivada)
+    terceraDerivada = diff ( segundaDerivada)
+    cuartaDerivada = diff ( terceraDerivada)
+    quintaDerivada = diff ( cuartaDerivada)
+    sextaDerivada = diff ( quintaDerivada)
+
+    h = (b - a) / 4
+    aprox=(2*h/45)*(7*func.subs({'x': a}).evalf() + 32*func.subs ({'x': a+h}).evalf() + 12*func.subs ({'x': a+2*h}).evalf() + 32*func.subs ({'x': a+3*h}).evalf() + 7*func.subs ({'x': b}).evalf())
+
+    eps = a;
+    for i in range (a, b):
+        if abs( sextaDerivada . subs ({ 'x': i})) > abs( sextaDerivada . subs ({ 'x': eps })):
+            eps = i
+    
+    cota_error = ((8/945)*(h**7)*abs(sextaDerivada.subs({'x':eps}))).evalf()
+
+
+    return [aprox,cota_error]
 
 
 def trapecioCompuesto():
