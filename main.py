@@ -13,7 +13,7 @@ font = "Calibri"
 # _______________________________________Funciones______________________________________________
 
 functions = ["trapecio", "simpson", "boole", "trapecioCompuesto", "simpsonCompuesto", "gaussian"]
-args = ["()", "()", "(function_string, a, b)", "()", "(function_string, a, b, puntos)",
+args = ["(function_string, (a,b))", "(function_string, (a,b))", "(function_string, a, b)", "(function_string, (a,b), puntos)", "(function_string, a, b, puntos)",
         "(function_string, a, b, puntos)"]
 
 

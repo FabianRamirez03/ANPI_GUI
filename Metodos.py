@@ -2,35 +2,95 @@ from sympy import sympify
 from sympy import diff
 import math
 import numpy as np
+import sympy as sp
 import matplotlib.pyplot as plt
 from sympy import *
+from scipy import optimize
 
 
-def trapecio():
-    return ["trapecio", 152]  # [Aproximacion, error]
+'''
+Funcion para calcular una integral mediante el metodo del trapecio
+Entradas: 
+    f : la funcion a integrar en string   
+    intervalo : tupla del intervalo de integracion
+Salidas:
+    I: aproximacion del resultado de la integracion
+    er: cota de error de la aproximacion
+'''
+
+def trapecio(f, intervalo):
+    x = sp.symbols("x")
+    f = sp.sympify(f) #f como funcion simbolica
+    fn = sp.lambdify(x, f) # f como funcion numerica
+
+    # Se establecen los valores iniciales
+    a = intervalo[0]
+    b = intervalo[1]
+    h = b - a
+
+    #Calculo de la aproximacion
+    I = (fn(a)+fn(b))*h/2
+        
+    # Calculo del error
+    df2 = sp.diff(f, x, 2)  #Segunda derivada de f
+    # Se calcula el maximo de la segunda derivada de f en el intervalo
+    # Se toma el -abs de df2 porque el siguiente metodo solo calcula minimos
+    df2_abs = sp.lambdify(x, -abs(df2)) 
+    #Se calcula y se invierte el signo que se agregó anteriormente
+    alpha_max = -optimize.minimize_scalar(df2_abs, bounds=(a, b), method='bounded').fun 
+    er = ((h**3)*alpha_max)/12
+    return [I, er]
 
 
-def simpson():
-    return ["simpson", 158]
+'''
+Funcion para calcular una integral mediante el metodo de Simpson
+Entradas: 
+    f : la funcion a integrar en string   
+    intervalo : tupla del intervalo de integracion
+Salidas:
+    I: aproximacion del resultado de la integracion
+    er: cota de error de la aproximacion
+'''
+def simpson (f, intervalo):
+    x = sp.symbols("x")
+    f = sp.sympify(f) #f como funcion simbolica
+    fn = sp.lambdify(x, f) # f como funcion numerica
 
+    # Se establecen los valores iniciales
+    a = intervalo[0]
+    b = intervalo[1]
+    h = b - a
+
+    #Calculo de la aproximacion
+    I=((b-a)/6)*(fn(a)+4*fn((a+b)/2)+fn(b))
+
+    # Calculo del error
+    df4 = sp.diff(f,x,4)  #Cuarta derivada de f
+    # Se calcula el maximo de la cuarta derivada de f en el intervalo
+    # Se toma el -abs de df4 porque el siguiente metodo solo calcula minimos
+    df4_abs = sp.lambdify(x, -abs(df4)) 
+    #Se calcula y se invierte el signo que se agregó anteriormente
+    alpha_max = -optimize.minimize_scalar(df4_abs, bounds=(a, b), method='bounded').fun 
+    er = ((h**5)*alpha_max)/2880
+    return [I, er]
+    
+"""
+Esta función aproxima el valor de la integral de una función f(x), utilizando la Regla de Boole.
+
+Sintaxis: boole(f,a,b)
+
+Parámetros Iniciales: 
+            f = representa a la función f(x) a integrar
+            a = es el valor inicial del intervalo a integrar
+            b = es el valor final del intervalo a integrar
+            
+Parámetros de Salida: 
+            aprox = aproximación del valor de la integral de la función f
+            cota_error = error máximo posible 
+            
+"""
 
 def boole(f, a, b):
-    """
-    Esta función aproxima el valor de la integral de una función f(x), utilizando la Regla de Boole.
-    
-    Sintaxis: boole(f,a,b)
-    
-    Parámetros Iniciales: 
-                f = representa a la función f(x) a integrar
-                a = es el valor inicial del intervalo a integrar
-                b = es el valor final del intervalo a integrar
-                
-    Parámetros de Salida: 
-                aprox = aproximación del valor de la integral de la función f
-                cota_error = error máximo posible 
-                
-    """
-
     func = sympify(f)
 
     primeraDerivada = diff(func)
@@ -54,9 +114,44 @@ def boole(f, a, b):
     return [aprox, cota_error]
 
 
-def trapecioCompuesto():
-    return ["trapecioCompuesto", 255]
 
+
+'''
+Funcion para calcular una integral mediante el metodo del trapecio
+Entradas: 
+    f: la funcion a integrar en string   
+    intervalo: tupla del intervalo de integracion
+    n: numero de puntos en que se divide el intervalo de integracion
+Salidas:
+    I: aproximacion del resultado de la integracion
+    er: cota de error de la aproximacion
+'''
+
+def trapecioCompuesto(f, intervalo, n):
+    # Se establecen los valores iniciales
+    a = intervalo[0]
+    b = intervalo[1]
+    xv = np.linspace(a, b, num=n)
+    I = 0
+    er = 0
+    # Se calcula la integracion
+    for i in range(len(xv)-1):
+        result = trapecio(f,(xv[i],xv[i+1]))
+        I += result[0]
+        er += result[1] 
+    return [I, er]
+
+
+'''
+Funcion para calcular una integral mediante el metodo de Simpson compuesto
+Entradas: 
+    f: la funcion a integrar en string   
+    intervalo: tupla del intervalo de integracion
+    n: numero de puntos en que se divide el intervalo de integracion
+Salidas:
+    I: aproximacion del resultado de la integracion
+    er: cota de error de la aproximacion
+'''
 
 def simpsonCompuesto(f, a, b, m):
     func = sympify(f)
@@ -70,8 +165,8 @@ def simpsonCompuesto(f, a, b, m):
     x = [];
     x.append(a)
     while i < m:
-        x.append(a + (i * h));
-        i += 1;
+        x.append(a + (i * h))
+        i += 1
     i = 1
     sumaPar = 0
     sumaImpar = 0
@@ -104,3 +199,21 @@ def gaussian(f, a, b, n):
     ]
     resultado = ((b - a) / 2) * sum(values)
     return [resultado, 'N/A']
+
+
+
+"""
+def simpsonCompuesto(f, intervalo, n):
+    # Se establecen los valores iniciales
+    a = intervalo[0]
+    b = intervalo[1]
+    xv = np.linspace(a, b, num=n)
+    I = 0
+    er = 0
+    # Se calcula la integracion
+    for i in range(len(xv)-1):
+        result = simpson(f,(xv[i],xv[i+1]))
+        I += result[0]
+        er += result[1] 
+    return (I, er)
+"""
