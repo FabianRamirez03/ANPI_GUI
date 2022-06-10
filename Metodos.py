@@ -9,7 +9,7 @@ from scipy import optimize
 
 
 '''
-Funcion para calcular una integral mediante el metodo del trapecio
+Funcion para calcular una aproximacion de una integral mediante el metodo del trapecio
 Entradas: 
     f : la funcion a integrar en string   
     intervalo : tupla del intervalo de integracion
@@ -43,7 +43,7 @@ def trapecio(f, intervalo):
 
 
 '''
-Funcion para calcular una integral mediante el metodo de Simpson
+Funcion para calcular una aproximacion de una integral mediante el metodo de Simpson
 Entradas: 
     f : la funcion a integrar en string   
     intervalo : tupla del intervalo de integracion
@@ -80,36 +80,34 @@ Esta función aproxima el valor de la integral de una función f(x), utilizando 
 Sintaxis: boole(f,a,b)
 
 Parámetros Iniciales: 
-            f = representa a la función f(x) a integrar
-            a = es el valor inicial del intervalo a integrar
-            b = es el valor final del intervalo a integrar
+    f = representa a la función f(x) a integrar
+    a = es el valor inicial del intervalo a integrar
+    b = es el valor final del intervalo a integrar
             
 Parámetros de Salida: 
-            aprox = aproximación del valor de la integral de la función f
-            cota_error = error máximo posible 
+    aprox = aproximación del valor de la integral de la función f
+    cota_error = error máximo posible 
             
 """
 
 def boole(f, a, b):
-    func = sympify(f)
-
-    primeraDerivada = diff(func)
-    segundaDerivada = diff(primeraDerivada)
-    terceraDerivada = diff(segundaDerivada)
-    cuartaDerivada = diff(terceraDerivada)
-    quintaDerivada = diff(cuartaDerivada)
-    sextaDerivada = diff(quintaDerivada)
-
+    x = sp.symbols("x")
+    func = sp.sympify(f)
+    
+    # Se calcula la aproximacion de la integral
     h = (b - a) / 4
     aprox = (2 * h / 45) * (7 * func.subs({'x': a}).evalf() + 32 * func.subs({'x': a + h}).evalf() + 12 * func.subs(
         {'x': a + 2 * h}).evalf() + 32 * func.subs({'x': a + 3 * h}).evalf() + 7 * func.subs({'x': b}).evalf())
 
-    eps = a;
-    for i in range(a, b):
-        if abs(sextaDerivada.subs({'x': i})) > abs(sextaDerivada.subs({'x': eps})):
-            eps = i
-
-    cota_error = ((8 / 945) * (h ** 7) * abs(sextaDerivada.subs({'x': eps}))).evalf()
+    # Calculo del error
+    # Se calcula la sexta derivada de f
+    sextaDerivada = sp.diff(func, x, 6)
+    # Se calcula el maximo de la sexta derivada de f en el intervalo
+    # Se toma el -abs  porque el siguiente metodo solo calcula minimos
+    df6_abs = sp.lambdify(x, -abs(sextaDerivada)) 
+    #Se calcula y se invierte el signo que se agregó anteriormente
+    alpha_max = -optimize.minimize_scalar(df6_abs, bounds=(a, b), method='bounded').fun 
+    cota_error = (8 / 945) * (h ** 7) * alpha_max
 
     return [aprox, cota_error]
 
@@ -117,7 +115,7 @@ def boole(f, a, b):
 
 
 '''
-Funcion para calcular una integral mediante el metodo del trapecio
+Funcion para calcular una aproximacion de una integral mediante el metodo del trapecio
 Entradas: 
     f: la funcion a integrar en string   
     intervalo: tupla del intervalo de integracion
@@ -143,16 +141,59 @@ def trapecioCompuesto(f, intervalo, n):
 
 
 '''
-Funcion para calcular una integral mediante el metodo de Simpson compuesto
+Funcion para calcular una aproximacion de una integral mediante el metodo de Simpson compuesto
 Entradas: 
     f: la funcion a integrar en string   
-    intervalo: tupla del intervalo de integracion
+    a = es el valor inicial del intervalo a integrar
+    b = es el valor final del intervalo a integrar
     n: numero de puntos en que se divide el intervalo de integracion
 Salidas:
     I: aproximacion del resultado de la integracion
     er: cota de error de la aproximacion
 '''
 
+def simpsonCompuesto(f, a, b, n):
+    # Se establecen los valores iniciales
+    xv = np.linspace(a, b, num=n)
+    I = 0
+    er = 0
+    # Se calcula la integracion
+    for i in range(len(xv)-1):
+        result = simpson(f,(xv[i],xv[i+1]))
+        I += result[0]
+        er += result[1] 
+    return (I, er)
+
+
+'''
+Funcion para calcular una aproximacion de una integral por medio de cuadraturas Gaussianas
+Entradas: 
+    f: la funcion a integrar en string   
+    a = es el valor inicial del intervalo a integrar
+    b = es el valor final del intervalo a integrar
+    n: numero de puntos en que se divide el intervalo de integracion
+Salidas:
+    I: aproximacion del resultado de la integracion
+    er: cota de error de la aproximacion
+'''
+
+def gaussian(f, a, b, n):
+    fx = sympify(f)
+    [x, w] = np.polynomial.legendre.leggauss(n)
+
+    values = [
+        wi * fx.subs({'x': ((b - a) / 2) * xi + ((a + b) / 2)}).evalf()
+        for (xi, wi) in zip(x, w)
+    ]
+    resultado = ((b - a) / 2) * sum(values)
+    return [resultado, 'N/A']
+
+
+
+
+
+
+'''
 def simpsonCompuesto(f, a, b, m):
     func = sympify(f)
     primeraDerivada = diff(func)
@@ -187,33 +228,4 @@ def simpsonCompuesto(f, a, b, m):
             epsilon = i
     error = ((((b - a) * (h ** 4)) / 180) * abs(cuartaDerivada.subs({'x': epsilon}))).evalf()
     return [aprox, error]
-
-
-def gaussian(f, a, b, n):
-    fx = sympify(f)
-    [x, w] = np.polynomial.legendre.leggauss(n)
-
-    values = [
-        wi * fx.subs({'x': ((b - a) / 2) * xi + ((a + b) / 2)}).evalf()
-        for (xi, wi) in zip(x, w)
-    ]
-    resultado = ((b - a) / 2) * sum(values)
-    return [resultado, 'N/A']
-
-
-
-"""
-def simpsonCompuesto(f, intervalo, n):
-    # Se establecen los valores iniciales
-    a = intervalo[0]
-    b = intervalo[1]
-    xv = np.linspace(a, b, num=n)
-    I = 0
-    er = 0
-    # Se calcula la integracion
-    for i in range(len(xv)-1):
-        result = simpson(f,(xv[i],xv[i+1]))
-        I += result[0]
-        er += result[1] 
-    return (I, er)
-"""
+'''
