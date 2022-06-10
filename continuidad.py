@@ -28,7 +28,7 @@ def esContinua(f, intervalo):
     
 
 # Ejemplo Numerico
-funcion = "tan(x)"
-intervalo = (0,pi)
-resultado = esContinua(funcion, intervalo)
-print(resultado)
+#funcion = "tan(x)"
+#intervalo = (0,pi)
+#resultado = esContinua(funcion, intervalo)
+#print(resultado)

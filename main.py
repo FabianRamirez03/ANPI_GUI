@@ -3,6 +3,7 @@ from tkinter import messagebox
 from tkinter import ttk
 from PIL import ImageTk, Image
 import Metodos
+from continuidad import esContinua
 
 # Constantes gráficas
 width = 500
@@ -19,25 +20,43 @@ args = ["(function_string, (a,b))", "(function_string, (a,b))", "(function_strin
 
 def calcular():
     global var, functions, args
+    # Obtener valores de la interfaz
     function_string = function_entry.get()
     a = int(a_entry.get())
     b = int(b_entry.get())
+    signo = 1 # Signo del resultado
+
+    # Si se ingresa a > b
+    if a > b:
+        # Hacer el intercambio
+        c = a
+        a = b
+        b = c
+        signo = -1
+
     # Checkear continuidad de la función
+    if not esContinua(function_string, (a,b)):
+        messagebox.showerror('Error', 'La función no es continua en el intervalo proporcionado')
+
     puntos = int(points_entry.get())
     values = eval('Metodos.' + functions[var.get()] + args[var.get()])
-    setAproxText(values[0])
+    setAproxText(signo * values[0])
     setErrorText(values[1])
 
 
 def setAproxText(text):
+    aprox_entry.config(state='normal')
     aprox_entry.delete(0, tk.END)
     aprox_entry.insert(0, text)
+    aprox_entry.config(state='readonly')
     return
 
 
 def setErrorText(text):
+    error_entry.config(state='normal')
     error_entry.delete(0, tk.END)
     error_entry.insert(0, text)
+    error_entry.config(state='readonly')
     return
 
 
@@ -98,7 +117,7 @@ complex_methods_frame.pack(fill='both')
 # ________________________________________Top Frame Content______________________________________________
 
 # Titulo
-title_frame = tk.Label(top_frame, text="Calculadora de integrales Definidas", background="white", font=(font, 18))
+title_frame = tk.Label(top_frame, text="Calculadora de Integrales Definidas", background="white", font=(font, 18))
 title_frame.place(x=60, y=10)
 
 # Imagen de la integral
@@ -120,20 +139,22 @@ function_stringVar = tk.StringVar(root, value='x')
 function_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=32, textvariable=function_stringVar)
 function_entry.place(x=150, y=122)
 
-zero_stringVar = tk.StringVar(root, value='0')
+a_stringVar = tk.StringVar(root, value='0')
+b_stringVar = tk.StringVar(root, value='0')
+
 
 # Entry de a
 a_label = tk.Label(top_frame, text="a  =", background="white", font=(font, 12))
 a_label.place(x=130, y=170)
 
-a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=zero_stringVar)
+a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=a_stringVar)
 a_entry.place(x=180, y=170)
 
 # Entry de b
 b_label = tk.Label(top_frame, text="b  =", background="white", font=(font, 12))
 b_label.place(x=280, y=170)
 
-b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=zero_stringVar)
+b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5, textvariable=b_stringVar)
 b_entry.place(x=330, y=170)
 
 # ________________________________________Complex method tab Content______________________________________________
@@ -170,8 +191,9 @@ gaussian_radio.place(x=60, y=120)
 points_label = tk.Label(complex_methods_frame, text="Puntos a utilizar =", background="white", font=(font, 12))
 points_label.place(x=260, y=80)
 
+points_stringVar = tk.StringVar(root, value='0')
 
-points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6, textvariable=zero_stringVar)
+points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6, textvariable=points_stringVar)
 points_entry.place(x=400, y=80)
 
 # ________________________________________Calc tab Content______________________________________________
@@ -185,14 +207,14 @@ calc_button.place(x=180, y=2)
 aprox_label = tk.Label(calc_frame, text="Aproximación =", background="white", font=(font, 12))
 aprox_label.place(x=60, y=80)
 
-aprox_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22)
+aprox_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22, state='readonly')
 aprox_entry.place(x=180, y=80)
 
 # Entry del error
 error_label = tk.Label(calc_frame, text="Error =", background="white", font=(font, 12))
 error_label.place(x=60, y=110)
 
-error_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22)
+error_entry = tk.Entry(calc_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=22, state='readonly')
 error_entry.place(x=180, y=110)
 
 # ________________________________________Help tab Content______________________________________________

@@ -32,7 +32,7 @@ def trapecio(f, intervalo):
     # Calculo del error
     df2 = diff(f, x, 2)  #Segunda derivada de f
     alpha_max = maximum(df2, x, Interval(a, b)) 
-    er = ((h**3)*alpha_max)/12
+    er = float(((h**3)*alpha_max)/12)
 
     return [I, er]
 
@@ -60,9 +60,9 @@ def simpson (f, intervalo):
     I=((b-a)/6)*(fn(a)+4*fn((a+b)/2)+fn(b))
 
     # Calculo del error
-    df4 = sp.diff(f,x,4)  #Cuarta derivada de f
+    df4 = diff(f,x,4)  #Cuarta derivada de f
     alpha_max = maximum(df4, x, Interval(a, b)) 
-    er = ((h**5)*alpha_max)/2880
+    er = float(((h**5)*alpha_max)/2880)
 
     return [I, er]
     
@@ -95,7 +95,7 @@ def boole(f, a, b):
     # Se calcula la sexta derivada de f
     df6 = sp.diff(func, x, 6)
     alpha_max = maximum(df6, x, Interval(a, b)) 
-    cota_error = (8 / 945) * (h ** 7) * alpha_max
+    cota_error = float((8 / 945) * (h ** 7) * alpha_max)
 
     return [aprox, cota_error]
 
