@@ -5,8 +5,6 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 from sympy import *
-from scipy import optimize
-
 
 '''
 Funcion para calcular una aproximacion de una integral mediante el metodo del trapecio
@@ -19,9 +17,9 @@ Salidas:
 '''
 
 def trapecio(f, intervalo):
-    x = sp.symbols("x")
-    f = sp.sympify(f) #f como funcion simbolica
-    fn = sp.lambdify(x, f) # f como funcion numerica
+    x = symbols("x")
+    f = sympify(f) #f como funcion simbolica
+    fn = lambdify(x, f) # f como funcion numerica
 
     # Se establecen los valores iniciales
     a = intervalo[0]
@@ -32,13 +30,10 @@ def trapecio(f, intervalo):
     I = (fn(a)+fn(b))*h/2
         
     # Calculo del error
-    df2 = sp.diff(f, x, 2)  #Segunda derivada de f
-    # Se calcula el maximo de la segunda derivada de f en el intervalo
-    # Se toma el -abs de df2 porque el siguiente metodo solo calcula minimos
-    df2_abs = sp.lambdify(x, -abs(df2)) 
-    #Se calcula y se invierte el signo que se agregó anteriormente
-    alpha_max = -optimize.minimize_scalar(df2_abs, bounds=(a, b), method='bounded').fun 
+    df2 = diff(f, x, 2)  #Segunda derivada de f
+    alpha_max = maximum(df2, x, Interval(a, b)) 
     er = ((h**3)*alpha_max)/12
+
     return [I, er]
 
 
@@ -52,9 +47,9 @@ Salidas:
     er: cota de error de la aproximacion
 '''
 def simpson (f, intervalo):
-    x = sp.symbols("x")
-    f = sp.sympify(f) #f como funcion simbolica
-    fn = sp.lambdify(x, f) # f como funcion numerica
+    x = symbols("x")
+    f = sympify(f) #f como funcion simbolica
+    fn = lambdify(x, f) # f como funcion numerica
 
     # Se establecen los valores iniciales
     a = intervalo[0]
@@ -66,12 +61,9 @@ def simpson (f, intervalo):
 
     # Calculo del error
     df4 = sp.diff(f,x,4)  #Cuarta derivada de f
-    # Se calcula el maximo de la cuarta derivada de f en el intervalo
-    # Se toma el -abs de df4 porque el siguiente metodo solo calcula minimos
-    df4_abs = sp.lambdify(x, -abs(df4)) 
-    #Se calcula y se invierte el signo que se agregó anteriormente
-    alpha_max = -optimize.minimize_scalar(df4_abs, bounds=(a, b), method='bounded').fun 
+    alpha_max = maximum(df4, x, Interval(a, b)) 
     er = ((h**5)*alpha_max)/2880
+
     return [I, er]
     
 """
@@ -91,8 +83,8 @@ Parámetros de Salida:
 """
 
 def boole(f, a, b):
-    x = sp.symbols("x")
-    func = sp.sympify(f)
+    x = symbols("x")
+    func = sympify(f)
     
     # Se calcula la aproximacion de la integral
     h = (b - a) / 4
@@ -101,12 +93,8 @@ def boole(f, a, b):
 
     # Calculo del error
     # Se calcula la sexta derivada de f
-    sextaDerivada = sp.diff(func, x, 6)
-    # Se calcula el maximo de la sexta derivada de f en el intervalo
-    # Se toma el -abs  porque el siguiente metodo solo calcula minimos
-    df6_abs = sp.lambdify(x, -abs(sextaDerivada)) 
-    #Se calcula y se invierte el signo que se agregó anteriormente
-    alpha_max = -optimize.minimize_scalar(df6_abs, bounds=(a, b), method='bounded').fun 
+    df6 = sp.diff(func, x, 6)
+    alpha_max = maximum(df6, x, Interval(a, b)) 
     cota_error = (8 / 945) * (h ** 7) * alpha_max
 
     return [aprox, cota_error]
