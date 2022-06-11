@@ -1,3 +1,5 @@
+from tkinter import*
+from tkPDFViewer import tkPDFViewer as pdf
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
@@ -42,6 +44,18 @@ def calcular():
     values = eval('Metodos.' + functions[var.get()] + args[var.get()])
     setAproxText(signo * values[0])
     setErrorText(values[1])
+
+def verManual():
+    top = Toplevel(root)
+    top.configure(background='white')
+    top.geometry(str(width+150)+"x"+str(heigth))
+    top.title("Manual de usuario")
+    icon = tk.PhotoImage(file="Images/icon.png")
+    top.iconphoto(False, icon)
+
+    pdf1 = pdf.ShowPdf()
+    pdf2 = pdf1.pdf_view(top,pdf_location=r"./Manual.pdf",width=width+150,height=heigth)
+    pdf2.pack()
 
 
 def setAproxText(text):
@@ -221,7 +235,7 @@ error_entry.place(x=180, y=110)
 
 # Boton para ayuda
 help_photoImage = tk.PhotoImage(file="Images/button_ayuda.png")
-help_button = tk.Button(help_frame, image=help_photoImage, borderwidth=0, background="white")
+help_button = tk.Button(help_frame, image=help_photoImage, borderwidth=0, background="white", command=verManual)
 help_button.place(x=210, y=2)
 
 
