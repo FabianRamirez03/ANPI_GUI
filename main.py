@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 from PIL import ImageTk, Image
-import Metodos
+import parte1_p2
 from continuidad import esContinua
 
 # Constantes gráficas
