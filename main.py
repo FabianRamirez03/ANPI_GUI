@@ -7,6 +7,7 @@ from PIL import ImageTk, Image
 import parte1_p2
 from continuidad import esContinua
 from sympy import sympify, symbols, lambdify
+import math
 
 # Constantes gráficas
 width = 500
@@ -25,16 +26,26 @@ args = ["(function_string, (a,b))", "(function_string, (a,b))", "(function_strin
 def calcular():
     global var, functions, args
     # Obtener valores de la interfaz
+    a_expression = False
+    b_expression = False
     function_string = function_entry.get()
     a = a_entry.get()
     b = b_entry.get()
     signo = 1  # Signo del resultado
     puntos = points_entry.get()
+    if verificar_expresiones_en_datos(a):
+        a_expression = True
+        a = evaluar_expresion(a)
+    if verificar_expresiones_en_datos(b):
+        b_expression = True
+        b = evaluar_expresion(b)
 
     if verificarDatos(function_string, a, b, puntos):
-        a = float(a)
-        b = float(b)
-        puntos = float(puntos)
+        if not a_expression:
+            a = eval(a)
+        if not b_expression:
+            b = eval(b)
+        puntos = int(puntos)
         # Si se ingresa a > b
         if a > b:
             # Hacer el intercambio
@@ -94,7 +105,7 @@ def verificar_floats(a, b, points):
     try:
         float(a)
         float(b)
-        float(points)
+        int(points)
         return True
     except:
         messagebox.showerror('Error', 'Los datos proporcionados no poseen el formato correcto.')
@@ -121,6 +132,26 @@ def verificar_continuidad(funcion, a, b):
     else:
         messagebox.showerror('Error', 'La función no es continua en el intervalo proporcionado')
         return False
+
+def verificar_expresiones_en_datos(dato):
+    special_chars = ['(', ')', '/', '-', '*', '+', 'pi', 'e' ]
+    for char in special_chars:
+        if char in dato:
+            return True
+    return False
+
+def evaluar_expresion(expresion):
+    try:
+        if 'pi' in expresion:
+            expresion = expresion.replace('pi', 'math.pi')
+        if 'e' in expresion:
+            expresion = expresion.replace('e', 'math.e')
+        return eval(expresion)
+    except:
+        messagebox.showerror('Error', 'Los datos proporcionados no poseen el formato correcto.')
+        return False
+
+
 
 # ___________________________________Aplicacion Grafica_____________________________________________
 root = tk.Tk()
@@ -209,7 +240,7 @@ b_stringVar = tk.StringVar(root, value='0')
 a_label = tk.Label(top_frame, text="a  =", background="white", font=(font, 12))
 a_label.place(x=130, y=170)
 
-a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5,
+a_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=9,
                    textvariable=a_stringVar)
 a_entry.place(x=180, y=170)
 
@@ -217,7 +248,7 @@ a_entry.place(x=180, y=170)
 b_label = tk.Label(top_frame, text="b  =", background="white", font=(font, 12))
 b_label.place(x=280, y=170)
 
-b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=5,
+b_entry = tk.Entry(top_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=9,
                    textvariable=b_stringVar)
 b_entry.place(x=330, y=170)
 
