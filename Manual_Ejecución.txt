@@ -1,0 +1,13 @@
+Para ejecutar la aplicación en cualquier entorno, se debe tener Python instalado y realizar los siguientes pasos:
+
+1. Abrir una consola y situarla en el directorio descomprimido del proyecto
+
+2. Ejecutar los siguientes comandos:
+
+.\venv\Scripts\activate
+
+py parte1_p3.py
+
+3. Para desactivar el ambiente virtual, se debe ejecutar el siguiente comando:
+
+deactivate
