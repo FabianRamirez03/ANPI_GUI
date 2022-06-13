@@ -43,7 +43,10 @@ def calcular():
             b = c
             signo = -1
 
-        values = eval('Metodos.' + functions[var.get()] + args[var.get()])
+        values = eval('parte1_p2.' + functions[var.get()] + args[var.get()])
+        if values[1] == float('inf'):
+            messagebox.showerror('Error', 'No fue posible determinar la cota de error para la función, debido a que no fue posible determinar el rango para el dominio solicitado')
+
         setAproxText(signo * values[0])
         setErrorText(values[1])
     else:
