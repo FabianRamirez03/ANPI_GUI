@@ -32,9 +32,9 @@ def calcular():
     puntos = points_entry.get()
 
     if verificarDatos(function_string, a, b, puntos):
-        a = int(a)
-        b = int(b)
-        puntos = int(puntos)
+        a = float(a)
+        b = float(b)
+        puntos = float(puntos)
         # Si se ingresa a > b
         if a > b:
             # Hacer el intercambio
@@ -82,7 +82,7 @@ def setErrorText(text):
 
 
 def verificarDatos(function, a, b, points):
-    if verificar_integers(a, b, points):
+    if verificar_floats(a, b, points):
         if verificar_funcion(function):
             if verificar_continuidad(function, a, b):
                 return True
@@ -90,11 +90,11 @@ def verificarDatos(function, a, b, points):
         return False
 
 
-def verificar_integers(a, b, points):
+def verificar_floats(a, b, points):
     try:
-        int(a)
-        int(b)
-        int(points)
+        float(a)
+        float(b)
+        float(points)
         return True
     except:
         messagebox.showerror('Error', 'Los datos proporcionados no poseen el formato correcto.')
@@ -113,8 +113,8 @@ def verificar_funcion(funcion):
         return False
 
 def verificar_continuidad(funcion, a, b):
-    a = int(a)
-    b = int(b)
+    a = float(a)
+    b = float(b)
     continuidad = esContinua(funcion, (a, b))
     if continuidad:
         return True
