@@ -92,8 +92,10 @@ Parámetros de Salida:
             
 """
 
-def boole(f, a, b):
+def boole(f, intervalo):
     try:
+        a = intervalo[0]
+        b = intervalo[1]
         x = symbols("x")
         func = sympify(f)
         
@@ -159,10 +161,13 @@ Salidas:
     er: cota de error de la aproximacion
 '''
 
-def simpsonCompuesto(f, a, b, n):
+def simpsonCompuesto(f,intervalo, n):
     try:
+        a = intervalo[0]
+        b = intervalo[1]
         # Se establecen los valores iniciales
         xv = np.linspace(a, b, num=n)
+        
         I = 0
         er = 0
         # Se calcula la integracion
@@ -188,8 +193,11 @@ Salidas:
     er: cota de error de la aproximacion
 '''
 
-def gaussian(f, a, b, n):
+def gaussian(f, intervalo , n):
     try:
+        # Se establecen los valores iniciales
+        a = intervalo[0]
+        b = intervalo[1]
         fx = sympify(f)
         [x, w] = np.polynomial.legendre.leggauss(n)
 
