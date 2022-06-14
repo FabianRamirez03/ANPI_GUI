@@ -53,13 +53,13 @@ def calcular():
             a = b
             b = c
             signo = -1
+        if verificar_continuidad(function, a, b):
+            values = eval('parte1_p2.' + functions[var.get()] + args[var.get()])
+            if values[1] == float('inf'):
+                messagebox.showerror('Error', 'No fue posible determinar la cota de error para la función, debido a que no fue posible determinar el rango para el dominio solicitado')
 
-        values = eval('parte1_p2.' + functions[var.get()] + args[var.get()])
-        if values[1] == float('inf'):
-            messagebox.showerror('Error', 'No fue posible determinar la cota de error para la función, debido a que no fue posible determinar el rango para el dominio solicitado')
-
-        setAproxText(signo * values[0])
-        setErrorText(values[1])
+            setAproxText(signo * values[0])
+            setErrorText(values[1])
     else:
         return
 
@@ -95,8 +95,7 @@ def setErrorText(text):
 def verificarDatos(function, a, b, points):
     if verificar_floats(a, b, points):
         if verificar_funcion(function):
-            if verificar_continuidad(function, a, b):
-                return True
+            return True
     else:
         return False
 

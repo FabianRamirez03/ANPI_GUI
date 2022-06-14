@@ -5,7 +5,6 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 from sympy import *
-from tkinter import messagebox
 
 '''
 Funcion para calcular una aproximacion de una integral mediante el metodo del trapecio
@@ -74,7 +73,7 @@ def simpson (f, intervalo):
         return [I, er]
 
     except:
-        return [0, float('inf')]
+        return [I, float('inf')]
     
 """
 Esta función aproxima el valor de la integral de una función f(x), utilizando la Regla de Boole.
@@ -113,7 +112,7 @@ def boole(f, intervalo):
         return [aprox, cota_error]
 
     except:
-        return [0, float('inf')]
+        return [aprox, float('inf')]
 
 
 
@@ -146,7 +145,7 @@ def trapecioCompuesto(f, intervalo, n):
         return [I, er]
 
     except:
-        return [0, float('inf')]
+        return [I, float('inf')]
 
 
 '''
@@ -178,7 +177,7 @@ def simpsonCompuesto(f,intervalo, n):
         return (I, er)
 
     except:
-        return [0, float('inf')]
+        return [I, float('inf')]
 
 
 '''
@@ -209,7 +208,7 @@ def gaussian(f, intervalo , n):
         return [resultado, 'N/A']
 
     except:
-        return [0, float('inf')]
+        return [resultado, float('inf')]
 
 
 
