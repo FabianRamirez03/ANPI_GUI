@@ -24,7 +24,9 @@ args = ["(function_string, (a,b))", "(function_string, (a,b))", "(function_strin
 
 
 def calcular():
-    global var, functions, args
+    global var, functions, args, tabControl
+    tab_selected = tabControl.index(tabControl.select())
+    print(tab_selected)
     # Obtener valores de la interfaz
     a_expression = False
     b_expression = False
@@ -40,7 +42,7 @@ def calcular():
         b_expression = True
         b = evaluar_expresion(b)
 
-    if verificarDatos(function_string, a, b, puntos):
+    if verificarDatos(function_string, a, b, puntos, tab_selected):
         if not a_expression:
             a = eval(a)
         if not b_expression:
@@ -92,19 +94,22 @@ def setErrorText(text):
     return
 
 
-def verificarDatos(function, a, b, points):
-    if verificar_floats(a, b, points):
+def verificarDatos(function, a, b, points, tab_selected):
+    if verificar_floats(a, b, points, tab_selected):
         if verificar_funcion(function):
             return True
     else:
         return False
 
 
-def verificar_floats(a, b, points):
+def verificar_floats(a, b, points, tab_selected):
     try:
         float(a)
         float(b)
-        int(points)
+        points = int(points)
+        if tab_selected == 1 and not points >= 2:
+            messagebox.showerror('Error', 'Los datos proporcionados no poseen el formato correcto.')
+            return False
         return True
     except:
         messagebox.showerror('Error', 'Los datos proporcionados no poseen el formato correcto.')
@@ -285,7 +290,7 @@ gaussian_radio.place(x=60, y=120)
 points_label = tk.Label(complex_methods_frame, text="Puntos a utilizar =", background="white", font=(font, 12))
 points_label.place(x=260, y=80)
 
-points_stringVar = tk.StringVar(root, value='0')
+points_stringVar = tk.StringVar(root, value='2')
 
 points_entry = tk.Entry(complex_methods_frame, bd=1, background='white', font=(font, 12), justify=tk.CENTER, width=6,
                         textvariable=points_stringVar)
