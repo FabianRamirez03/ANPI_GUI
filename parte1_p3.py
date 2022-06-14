@@ -53,7 +53,7 @@ def calcular():
             a = b
             b = c
             signo = -1
-        if verificar_continuidad(function, a, b):
+        if verificar_continuidad(function_string, a, b):
             values = eval('parte1_p2.' + functions[var.get()] + args[var.get()])
             if values[1] == float('inf'):
                 messagebox.showerror('Error', 'No fue posible determinar la cota de error para la función, debido a que no fue posible determinar el rango para el dominio solicitado')
